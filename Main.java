@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
@@ -71,11 +72,29 @@ public class Main {
     };
   }
 
-  private static final File propertyFile = new File("/Users/nwolfe/Downloads/server.properties");
+  private static File propertyFile;
+
+  private static File getPropertyFile() {
+    if (propertyFile == null) {
+      JFileChooser fc = new JFileChooser();
+      fc.setFileFilter(new FileFilter() {
+        public boolean accept(File f) {
+          return f.isDirectory() || f.getAbsolutePath().endsWith(".properties");
+        }
+
+        public String getDescription() {
+          return ".properties files";
+        }
+      });
+      fc.showOpenDialog(null);
+      propertyFile = fc.getSelectedFile();
+    }
+    return propertyFile;
+  }
 
   private static String getMOTD() throws Exception {
     Properties properties = new Properties();
-    properties.load(new FileInputStream(propertyFile));
+    properties.load(new FileInputStream(getPropertyFile()));
     return properties.getProperty("motd");
   }
 
