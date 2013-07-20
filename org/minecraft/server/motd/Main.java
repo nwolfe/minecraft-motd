@@ -1,3 +1,5 @@
+package org.minecraft.server.motd;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.imageio.ImageIO;
@@ -8,6 +10,8 @@ import java.util.Properties;
 import java.io.*;
 
 public class Main {
+  private static final String PROGRAM_TITLE = "Minecraft Server MOTD";
+
   public static void main(String[] args) throws Exception {
     fancyMOTD();
   }
@@ -15,7 +19,7 @@ public class Main {
   private static void fancyMOTD() throws Exception {
     JFrame f = new JFrame();
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    f.setTitle("Minecraft Server MOTD");
+    f.setTitle(PROGRAM_TITLE + " - Hit ENTER to save");
     f.add(display());
     f.pack();
     f.setSize(854, 502);
@@ -75,21 +79,19 @@ public class Main {
   private static File propertyFile;
 
   private static File getPropertyFile() {
-    if (propertyFile == null) {
-      JFileChooser fc = new JFileChooser();
-      fc.setFileFilter(new FileFilter() {
-        public boolean accept(File f) {
-          return f.isDirectory() || f.getAbsolutePath().endsWith(".properties");
-        }
+    JFileChooser fc = new JFileChooser();
+    fc.setFileFilter(new FileFilter() {
+      public boolean accept(File f) {
+        return f.isDirectory() || f.getAbsolutePath().endsWith(".properties");
+      }
 
-        public String getDescription() {
-          return ".properties files";
-        }
-      });
-      fc.showOpenDialog(null);
-      propertyFile = fc.getSelectedFile();
-    }
-    return propertyFile;
+      public String getDescription() {
+        return ".properties files";
+      }
+    });
+    fc.setDialogTitle(PROGRAM_TITLE + " - Select server.properties file");
+    fc.showOpenDialog(null);
+    return propertyFile = fc.getSelectedFile();
   }
 
   private static String getMOTD() throws Exception {
